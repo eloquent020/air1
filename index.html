@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#e9f5ff">
+<meta name="mobile-web-app-capable" content="yes">
+<title>온도가 변하면 기체의 부피는? | 4학년 과학</title>
+<style>
+:root{--bg:#e9f5ff;--ink:#2d3047;--sub:#646b8a;--line:#dfe6f5;--pri:#6c5ce7;--pri2:#a29bfe;--yel:#ffd93d;--coral:#ff6b6b;--mint:#2ec4b6;--orange:#ff9f1c;--green:#22b573;--card:#fff;--soft:#f4f6ff}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overscroll-behavior:none}
+body{color:var(--ink);font-family:"Pretendard","Apple SD Gothic Neo","Malgun Gothic","Noto Sans KR",sans-serif;line-height:1.45;-webkit-tap-highlight-color:transparent;touch-action:manipulation;-webkit-user-select:none;user-select:none;display:flex;flex-direction:column;height:100vh;height:100dvh;overflow:hidden;
+  background:radial-gradient(circle at 12% 8%,#fff6c9 0 90px,transparent 91px),radial-gradient(circle at 92% 95%,#d9fff4 0 140px,transparent 141px),var(--bg)}
+button{font-family:inherit;color:var(--ink);cursor:pointer}
+header{flex:none;display:flex;align-items:center;gap:10px;padding:8px 16px 8px}
+.logo{width:46px;height:46px;flex:none}
+h1{font-size:clamp(19px,2.3vw,26px);margin:0;letter-spacing:-.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+h1 em{font-style:normal;color:var(--hl,var(--coral));background:linear-gradient(transparent 60%,#ffe58a 60%)}
+.grade{font-size:13px;font-weight:800;color:#fff;background:var(--pri);border-radius:999px;padding:3px 10px;white-space:nowrap}
+.hbtns{margin-left:auto;display:flex;gap:8px;flex:none}
+.hb{border:none;background:#fff;border-radius:16px;padding:6px 14px;font-size:15px;font-weight:800;box-shadow:0 3px 0 #d5dcef;min-height:48px;white-space:nowrap}
+.hb:active{transform:translateY(2px);box-shadow:0 1px 0 #d5dcef}
+.hb.pri{background:var(--pri);color:#fff;box-shadow:0 3px 0 #4b3cc4}
+main{flex:1;min-height:0;display:grid;grid-template-columns:minmax(0,1fr) clamp(320px,34vw,420px);gap:12px;padding:0 16px 12px}
+.card{background:var(--card);border-radius:24px;box-shadow:0 6px 0 #d7e3f7;padding:12px 14px}
+.stage{display:flex;flex-direction:column;min-height:0;min-width:0;padding:8px;border:3px solid #fff}
+.cwrap{flex:1;min-height:0;display:flex;align-items:center;justify-content:center}
+.cbox{position:relative}
+canvas{display:block;border-radius:18px;touch-action:none}
+.tools{position:absolute;top:8px;right:8px;display:flex;gap:6px}
+.tb{border:3px solid #fff;background:rgba(255,255,255,.95);border-radius:999px;padding:4px 14px;font-size:15px;font-weight:800;min-height:46px;box-shadow:0 3px 8px rgba(40,60,120,.15)}
+.tb.on{background:var(--pri);color:#fff}
+.tb.lens{background:#fff4c2}
+.tb.lens.on{background:var(--pri);color:#fff}
+.legend{flex:none;display:flex;gap:4px 14px;flex-wrap:wrap;font-size:13px;color:var(--sub);margin-top:6px;padding:0 6px}
+.dot{display:inline-block;width:12px;height:12px;border-radius:50%;vertical-align:-1px;margin-right:4px}
+.panel{display:flex;flex-direction:column;gap:10px;min-height:0;overflow-y:auto}
+.seg{display:grid;grid-template-columns:1fr 1fr;gap:6px;background:#d6e4fb;padding:5px;border-radius:20px;flex:none}
+.tab{border:none;border-radius:16px;padding:5px;font-weight:800;font-size:15px;background:transparent;color:var(--sub);min-height:54px;line-height:1.25}
+.tab small{font-weight:600;font-size:12.5px}
+.tab.on{background:#fff;color:var(--ink);box-shadow:0 3px 0 #c7d3ee}
+/* 도장판 */
+.stamps{display:flex;justify-content:space-around;align-items:flex-start;padding:8px 6px;flex:none}
+.st{border:none;background:none;display:flex;flex-direction:column;align-items:center;gap:2px;font-size:12.5px;font-weight:700;color:var(--sub);min-width:56px;padding:0}
+.st .c{width:44px;height:44px;border-radius:50%;border:3px dashed #c9d2ea;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:900;color:#b3bdd8;background:#f7f9ff}
+.st.cur .c{border:3px solid var(--pri);color:var(--pri);background:#f0eeff;animation:pulse 1.4s infinite}
+.st.done .c{border:3px solid var(--coral);background:#ffecec;color:var(--coral);transform:rotate(-12deg);font-size:24px}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(108,92,231,.45)}50%{box-shadow:0 0 0 8px rgba(108,92,231,0)}}
+/* 미션 카드 */
+.mcard{flex:1;min-height:0;display:flex;flex-direction:column;gap:8px;overflow-y:auto}
+.mhead{display:flex;align-items:center;gap:8px}
+.mnum{background:var(--yel);border-radius:999px;padding:2px 12px;font-weight:900;font-size:15px}
+.mtitle{font-weight:800;font-size:16px;color:var(--sub)}
+.talk{display:flex;gap:8px;align-items:flex-start}
+.talk svg{width:58px;height:58px;flex:none}
+.say{position:relative;background:#f0f4ff;border-radius:18px;padding:10px 12px;font-size:18px;font-weight:800;line-height:1.4;flex:1}
+.say:before{content:"";position:absolute;left:-9px;top:18px;border:9px solid transparent;border-right-color:#f0f4ff;border-left:0}
+.mstep{font-size:14px;font-weight:800;color:var(--pri)}
+.mstep.live{color:var(--coral);animation:blink 1.2s infinite}
+@keyframes blink{50%{opacity:.45}}
+.choices{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.ch{border:3px solid var(--line);background:#fff;border-radius:18px;padding:6px 4px;font-size:16px;font-weight:800;min-height:72px;line-height:1.25;box-shadow:0 3px 0 var(--line)}
+.ch .i{display:block;font-size:26px}
+.ch:active{transform:translateY(2px)}
+.mypick{font-size:15px;background:#fff8d6;border-radius:14px;padding:6px 10px;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.link{border:none;background:none;color:var(--pri);font-weight:800;font-size:14px;text-decoration:underline;min-height:40px;margin-left:auto}
+.cmp{display:flex;align-items:center;gap:6px}
+.cmp>div{flex:1;background:#f4f6ff;border-radius:16px;padding:6px 8px;text-align:center}
+.cmp small{display:block;color:var(--sub);font-size:12.5px;font-weight:700}
+.cmp b{font-size:18px}
+.cmp .res{background:#e5fbef}
+.cmp .ar{flex:none;background:none;font-size:22px;color:var(--sub);padding:0}
+.exp{font-size:16.5px;font-weight:700;background:#fffbe6;border:2px solid #ffe38a;border-radius:16px;padding:8px 12px}
+.lensx{font-size:15px;background:#f1eeff;border:2px dashed var(--pri2);border-radius:16px;padding:8px 12px}
+.big{border:none;border-radius:18px;min-height:56px;font-size:18px;font-weight:900;background:var(--pri);color:#fff;box-shadow:0 4px 0 #4b3cc4}
+.big.alt{background:#fff4c2;color:var(--ink);box-shadow:0 4px 0 #e6cf6c}
+.big:active{transform:translateY(3px);box-shadow:0 1px 0 #4b3cc4}
+.ctl{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+.ctl.two{grid-template-columns:1fr 1fr}
+.cb{border:none;border-radius:16px;background:#eef3ff;min-height:56px;font-size:14.5px;font-weight:800;line-height:1.2;box-shadow:0 3px 0 #d3dcf3}
+.cb .i{display:block;font-size:20px}
+.cb:active{transform:translateY(2px)}
+.cb:disabled{opacity:.45}
+.flash{animation:flash 1.2s infinite}
+@keyframes flash{0%,100%{box-shadow:0 0 0 0 rgba(255,107,107,.7)}50%{box-shadow:0 0 0 7px rgba(255,107,107,0)}}
+.hide{display:none!important}
+/* 시작 화면 · 도움말 · 정리 */
+.ov{position:fixed;inset:0;z-index:40;display:flex;align-items:center;justify-content:center;background:rgba(30,35,70,.5);padding:20px}
+.ovbox{background:#fff;border-radius:28px;padding:22px 26px;max-width:620px;width:100%;text-align:center;box-shadow:0 10px 0 #c9d6f2}
+.ovbox svg{width:110px;height:110px}
+.ovbox h2{margin:6px 0 4px;font-size:26px}
+.ovbox p{margin:0 0 16px;color:var(--sub);font-size:17px}
+.ovbtns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.ovbtns .big{padding:0 26px}
+#tour{position:fixed;inset:0;z-index:50}
+#tour .hole{position:fixed;border-radius:18px;box-shadow:0 0 0 9999px rgba(20,25,60,.6);border:4px solid var(--yel);transition:all .25s;pointer-events:none}
+#tour .tip{position:fixed;background:#fff;border-radius:20px;padding:12px 14px;max-width:340px;box-shadow:0 8px 24px rgba(0,0,0,.25);font-size:17px;font-weight:700;transition:all .25s}
+#tour .tip .row{display:flex;gap:8px;margin-top:10px;justify-content:flex-end}
+#tour .tip .row button{border:none;border-radius:14px;min-height:46px;padding:0 16px;font-weight:800;font-size:15px;background:#eef1fb}
+#tour .tip .row button.n{background:var(--pri);color:#fff}
+#tour .tip .cnt{font-size:13px;color:var(--sub)}
+.sheet{position:fixed;inset:0;background:rgba(20,30,60,.5);display:none;align-items:center;justify-content:center;z-index:30;padding:16px}
+.sheet.open{display:flex}
+.sheetbox{background:var(--bg);border-radius:26px;width:min(1200px,100%);max-height:100%;overflow:auto;padding:14px 16px}
+.sheethead{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.sheethead h2{margin:0;font-size:22px;flex:1}
+.sheetgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.sheetgrid h3{margin:0 0 8px;font-size:18px}
+.sheetgrid li{margin-bottom:8px;font-size:16px}
+.sheetgrid ul{padding-left:20px;margin:0}
+.q{margin-bottom:12px}
+.q p{margin:0 0 6px;font-weight:800}
+.q .opts{display:flex;flex-wrap:wrap;gap:6px}
+.q button{border:2px solid var(--line);background:#fff;border-radius:14px;padding:6px 14px;font-size:15px;min-height:46px;font-weight:700}
+.q button.ok{background:#dff7ea;border-color:var(--green)}
+.q button.no{background:#ffe5e5;border-color:var(--coral)}
+.q .fb{font-size:14px;margin-top:4px;min-height:20px;color:var(--sub)}
+.rotate{position:fixed;inset:0;background:rgba(233,245,255,.98);z-index:60;display:none;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:14px;padding:30px;font-size:20px}
+.rotate .bigi{font-size:84px;animation:rot 2.2s ease-in-out infinite}
+@keyframes rot{0%,30%{transform:rotate(0)}60%,100%{transform:rotate(-90deg)}}
+@media (orientation:portrait){
+  body:not(.okPortrait) .rotate{display:flex}
+  body{height:auto;overflow:auto}
+  main{grid-template-columns:1fr}
+  .cwrap{flex:none;aspect-ratio:800/620}
+  .panel,.mcard{overflow:visible}
+  .sheetgrid{grid-template-columns:1fr}
+}
+@media (max-height:700px) and (orientation:landscape){
+  header{padding:6px 14px}.logo{width:40px;height:40px}.hb{min-height:44px;font-size:14px;padding:4px 12px}
+  .say{font-size:16.5px;padding:8px 10px}.talk svg{width:50px;height:50px}
+  .ch{min-height:62px;font-size:15px}.ch .i{font-size:22px}
+  .exp{font-size:15px;padding:6px 10px}.lensx{font-size:14px;padding:6px 10px}
+  .big{min-height:50px;font-size:17px}.stamps{padding:6px 4px}.st .c{width:40px;height:40px}
+  .mcard{gap:6px}.cb{min-height:50px}.tab{min-height:48px}
+}
+.okbar{display:flex;align-items:center;gap:8px;border-radius:16px;padding:4px 10px;font-size:16.5px}
+.okbar svg{width:40px;height:40px;flex:none}
+.okbar.yes{background:#e5fbef}.okbar.no{background:#fff1e0}
+.lensnote{flex:none;margin-top:6px;background:var(--pri);color:#fff;border-radius:999px;padding:5px 14px;font-size:14px;font-weight:800;text-align:center}
+@media (max-height:760px) and (orientation:landscape){
+  .cb{min-height:44px;font-size:14px}.cb .i{display:inline;font-size:17px;margin-right:4px}
+  .okbar{padding:2px 8px;font-size:15.5px}.okbar svg{width:32px;height:32px}
+  .cmp>div{padding:3px 6px}.cmp b{font-size:16.5px}.lensx{font-size:13.5px;line-height:1.4}
+  .stamps{padding:4px}.st .c{width:36px;height:36px;font-size:16px}.st.done .c{font-size:20px}
+}
+
+.logo{display:inline-block}.logo svg{width:100%;height:100%}
+
+</style>
+</head>
+<body>
+<header>
+  <span class="logo" data-pbg="happy"></span>
+  <span class="grade">4학년 과학</span>
+  <h1><em>온도</em>가 변하면 기체의 부피는 어떻게 될까?</h1>
+  <div class="hbtns"><button class="hb" id="helpBtn">❓ 사용법</button><button class="hb" id="sumBtn">📒 정리</button><button class="hb pri" id="fsBtn">⛶ 전체 화면</button></div>
+</header>
+<main>
+  <section class="card stage">
+    <div class="cwrap"><div class="cbox"><canvas id="stage" width="800" height="620"></canvas>
+      <div class="tools"><button class="tb lens" id="lensBtn">🔍 돋보기</button><button class="tb" id="resetBtn">↺ 처음으로</button></div>
+    </div></div>
+    <div class="lensnote hide" id="lensNote">🔍 돋보기로 본 상상 모습이에요 · 실제 공기 알갱이는 너무 작아서 눈에 보이지 않아요</div>
+    <div class="legend">
+      <span><span class="dot" style="background:#6c5ce7"></span>보라색 점: 공기 알갱이 (🔍 돋보기를 켰을 때)</span>
+      <span>┅ 점선: 처음 풍선 크기</span>
+      <span>➜ 빨강: 커지는 방향 · 파랑: 작아지는 방향</span>
+    </div>
+  </section>
+  <aside class="panel">
+    
+    <div class="card stamps" id="stamps"></div>
+    <div class="card mcard" id="mcard"></div>
+    
+  </aside>
+</main>
+<div class="sheet" id="sheet"><div class="sheetbox">
+  <div class="sheethead"><h2>📒 정리하고 확인해요 <small style="font-size:13px;color:#646b8a;font-weight:600">※ 화면 속 변화는 잘 보이도록 실제보다 크게 나타냈어요</small></h2><button class="hb" id="msReset">🔄 미션 다시 하기</button><button class="hb" id="sheetClose">✕ 닫기</button></div>
+  <div class="sheetgrid">
+    <div class="card"><h3>📒 알게 된 점</h3><ul><li>기체의 <b>온도가 높아지면</b> 기체의 <b>부피가 커져요.</b> (뜨거운 물 → 풍선이 부풀어요)</li>
+      <li>기체의 <b>온도가 낮아지면</b> 기체의 <b>부피가 작아져요.</b> (얼음물 → 풍선이 오그라들어요)</li>
+      <li>🔍 돋보기로 보면, 온도가 변해도 공기 알갱이의 <b>개수와 크기는 그대로</b>이고, 움직이는 빠르기와 알갱이 사이의 거리가 달라져요.</li></ul></div>
+    <div class="card"><h3>🏠 생활 속에서 찾아봐요</h3><ul><li>🏓 찌그러진 탁구공을 뜨거운 물에 넣으면 펴져요.</li>
+      <li>🧴 뜨거운 물을 담았다가 비운 페트병의 뚜껑을 닫아 두면, 식으면서 찌그러져요.</li>
+      <li>🎈 햇볕 아래에 둔 풍선은 더 팽팽해지고, 추운 바깥에 두면 쭈글쭈글해져요.</li>
+      <li>🍲 뜨거운 음식을 담은 그릇에 랩을 씌우면 랩이 부풀어 올라요.</li></ul></div>
+    <div class="card" id="quiz"><h3>✅ 확인 문제</h3></div>
+  </div>
+</div></div>
+<div class="ov" id="start"><div class="ovbox">
+  <span data-pbg="happy"></span>
+  <h2>안녕! 나는 공기 방울 뽀글이야</h2>
+  <p>고무풍선을 씌운 병을 <b>뜨거운 물</b>과 <b>얼음물</b>에 넣어 보자.<br>풍선은 어떻게 변할까? 미션 3개를 함께 해결해 보자!<br><small style="font-size:14px">※ 변화가 잘 보이도록 실제 실험보다 크게 나타냈어요.</small></p>
+  <div class="ovbtns"><button class="big" id="startGo">▶ 실험 시작</button><button class="big alt" id="startHelp">❓ 사용법 보기</button><button class="big alt" id="startFS">⛶ 전체 화면으로 시작</button></div>
+</div></div>
+<div id="tour" class="hide"><div class="hole"></div><div class="tip"><div class="tx"></div><div class="row"><span class="cnt"></span><button class="x">닫기</button><button class="p">◀</button><button class="n">다음 ▶</button></div></div></div>
+<div class="rotate">
+  <div class="bigi">📱</div>
+  <b>태블릿을 가로로 돌려 주세요!</b>
+  <div>가로 화면에서 실험 장면과 미션이 한눈에 보여요.</div>
+  <button class="big" id="rotFS">⛶ 가로로 고정하고 전체 화면</button>
+  <button class="big alt" id="rotOK">그래도 세로로 볼게요</button>
+</div>
+<script>
+/* ================= 공통: 화면 맞춤 · 그리기 도구 ================= */
+const W=800,H=620,$=id=>document.getElementById(id);
+const cv=$('stage'),ctx=cv.getContext('2d'),cwrap=document.querySelector('.cwrap');
+function resize(){
+  const d=Math.min(window.devicePixelRatio||1,2.5),r=cwrap.getBoundingClientRect();
+  let w=r.width,h=w*H/W;
+  if(getComputedStyle(cwrap).flexGrow!=='0'&&h>r.height&&r.height>80){h=r.height;w=h*W/H;}
+  w=Math.max(200,w);h=w*H/W;
+  cv.style.width=Math.floor(w)+'px';cv.style.height=Math.floor(h)+'px';
+  cv.width=Math.round(w*d);cv.height=Math.round(h*d);
+  ctx.setTransform(cv.width/W,0,0,cv.height/H,0,0);
+}
+resize();addEventListener('resize',resize);
+if(window.ResizeObserver)new ResizeObserver(()=>resize()).observe(cwrap);
+const lerp=(a,b,k)=>a+(b-a)*k, clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+function rr(x,y,w,h,r){ctx.beginPath();if(ctx.roundRect)ctx.roundRect(x,y,w,h,r);else ctx.rect(x,y,w,h);}
+function arrow(x1,y1,x2,y2,col,w){
+  const a=Math.atan2(y2-y1,x2-x1),hl=w*2.6;
+  ctx.strokeStyle=col;ctx.fillStyle=col;ctx.lineWidth=w;ctx.lineCap='round';
+  ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2-Math.cos(a)*hl*0.6,y2-Math.sin(a)*hl*0.6);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(x2,y2);ctx.lineTo(x2-Math.cos(a-0.5)*hl,y2-Math.sin(a-0.5)*hl);
+  ctx.lineTo(x2-Math.cos(a+0.5)*hl,y2-Math.sin(a+0.5)*hl);ctx.closePath();ctx.fill();
+}
+// 선을 따라 흘러가는 굵은 화살 모양(공기 흐름)
+function flowChevrons(pts,phase,col,size,alpha){
+  if(alpha<=0.02)return;
+  let segs=[],tot=0;
+  for(let i=0;i<pts.length-1;i++){const [x1,y1]=pts[i],[x2,y2]=pts[i+1],l=Math.hypot(x2-x1,y2-y1);segs.push({x1,y1,x2,y2,l,s:tot});tot+=l;}
+  const gap=size*2.4;
+  ctx.save();ctx.globalAlpha=alpha;ctx.fillStyle=col;ctx.strokeStyle='#fff';ctx.lineWidth=2;ctx.lineJoin='round';
+  for(let d=(phase*gap)%gap;d<tot;d+=gap){
+    const sg=segs.find(s=>d>=s.s&&d<=s.s+s.l);if(!sg)continue;
+    const k=(d-sg.s)/sg.l,x=lerp(sg.x1,sg.x2,k),y=lerp(sg.y1,sg.y2,k),a=Math.atan2(sg.y2-sg.y1,sg.x2-sg.x1);
+    ctx.save();ctx.translate(x,y);ctx.rotate(a);ctx.beginPath();
+    ctx.moveTo(size*0.6,0);ctx.lineTo(-size*0.5,-size*0.7);ctx.lineTo(-size*0.15,0);ctx.lineTo(-size*0.5,size*0.7);ctx.closePath();
+    ctx.stroke();ctx.fill();ctx.restore();
+  }
+  ctx.restore();
+}
+function label(text,x,y,bg,fg,size){
+  ctx.font=`bold ${size||16}px sans-serif`;const w=ctx.measureText(text).width+20,h=(size||16)+14;
+  ctx.fillStyle=bg;rr(x-w/2,y-h/2,w,h,h/2);ctx.fill();
+  ctx.fillStyle=fg;ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(text,x,y+1);ctx.textBaseline='alphabetic';
+}
+function bubble(st){
+  if(!st)return;ctx.font='bold 19px sans-serif';const w=ctx.measureText(st).width+30;
+  ctx.fillStyle='rgba(255,255,255,.96)';ctx.strokeStyle='#ffd93d';ctx.lineWidth=3;rr(16,16,w,42,21);ctx.fill();ctx.stroke();
+  ctx.fillStyle='#2d3047';ctx.textAlign='left';ctx.fillText(st,31,44);
+}
+function lensCaption(){
+  ctx.fillStyle='rgba(108,92,231,.92)';rr(130,H-38,540,30,15);ctx.fill();
+  ctx.fillStyle='#fff';ctx.font='bold 14px sans-serif';ctx.textAlign='center';
+  ctx.fillText('🔍 돋보기로 본 상상 모습 · 실제 공기 알갱이는 너무 작아서 눈에 보이지 않아요',400,H-18);
+}
+function pulseRing(x,y,w,h,t){
+  const a=0.55+0.45*Math.sin(t*6);
+  ctx.save();ctx.strokeStyle=`rgba(255,107,107,${a})`;ctx.lineWidth=5;ctx.setLineDash([12,8]);ctx.lineDashOffset=-t*30;
+  rr(x,y,w,h,18);ctx.stroke();ctx.restore();
+}
+function canvasPt(e){const r=cv.getBoundingClientRect();return{x:(e.clientX-r.left)*W/r.width,y:(e.clientY-r.top)*H/r.height};}
+function toScreen(x,y,w,h){const r=cv.getBoundingClientRect(),k=r.width/W;return{left:r.left+x*k,top:r.top+y*k,width:w*k,height:h*k};}
+
+/* ================= 뽀글이(안내 캐릭터) ================= */
+function pbg(mood){
+  const mouth=mood==='wow'?'<ellipse cx="50" cy="66" rx="7" ry="8" fill="#2d3047"/>'
+    :mood==='think'?'<circle cx="54" cy="66" r="4.5" fill="#2d3047"/>'
+    :'<path d="M38 62 Q50 74 62 62" stroke="#2d3047" stroke-width="4" fill="none" stroke-linecap="round"/>';
+  return `<svg viewBox="0 0 100 100" aria-hidden="true"><defs><radialGradient id="pg${mood}" cx="35%" cy="30%" r="75%"><stop offset="0" stop-color="#ffffff"/><stop offset=".35" stop-color="#bfe6ff"/><stop offset="1" stop-color="#7cc4f5"/></radialGradient></defs>
+  <circle cx="50" cy="54" r="40" fill="url(#pg${mood})" stroke="#4aa3e0" stroke-width="3"/>
+  <ellipse cx="34" cy="36" rx="9" ry="6" fill="#fff" opacity=".9" transform="rotate(-30 34 36)"/>
+  <circle cx="38" cy="50" r="5.5" fill="#2d3047"/><circle cx="62" cy="50" r="5.5" fill="#2d3047"/>
+  <circle cx="39.5" cy="48" r="1.8" fill="#fff"/><circle cx="63.5" cy="48" r="1.8" fill="#fff"/>
+  <circle cx="30" cy="60" r="5" fill="#ff9fb3" opacity=".7"/><circle cx="70" cy="60" r="5" fill="#ff9fb3" opacity=".7"/>${mouth}
+  <circle cx="86" cy="18" r="6" fill="#d8f0ff" stroke="#4aa3e0" stroke-width="2"/><circle cx="76" cy="8" r="3.5" fill="#d8f0ff" stroke="#4aa3e0" stroke-width="2"/></svg>`;
+}
+document.querySelectorAll('[data-pbg]').forEach(el=>el.innerHTML=pbg(el.dataset.pbg));
+
+/* ================= 미션(예상 → 실험 → 비교) ================= */
+const MS={list:[],cur:0,st:{},onSelect:null,lens:false,onLens:null};
+function msInit(list,onSelect){
+  MS.list=list;MS.onSelect=onSelect;list.forEach(m=>MS.st[m.id]={phase:'predict',pick:null});msRender();
+}
+function msCur(){return MS.list[MS.cur];}
+function msGo(i){MS.cur=i;const m=msCur();if(MS.onSelect)MS.onSelect(m);msRender();}
+function msAllDone(){return MS.list.every(m=>MS.st[m.id].phase==='done');}
+function msTick(){
+  const m=msCur(),s=MS.st[m.id];
+  if(s.phase==='do'&&m.check()){s.phase='done';msRender();}
+}
+function choiceLabel(m,v){const c=m.choices.find(c=>c.v===v);return c?c.label:'';}
+function msRender(){
+  // 도장판
+  $('stamps').innerHTML=MS.list.map((m,i)=>{const s=MS.st[m.id];
+    return `<button class="st ${s.phase==='done'?'done':''} ${i===MS.cur?'cur':''}" data-i="${i}"><span class="c">${s.phase==='done'?'⭐':i+1}</span>${m.short}</button>`;}).join('');
+  $('stamps').querySelectorAll('.st').forEach(b=>b.onclick=()=>msGo(+b.dataset.i));
+  const m=msCur(),s=MS.st[m.id],head=`<div class="mhead"><span class="mnum">미션 ${MS.cur+1}</span><span class="mtitle">${m.title}</span></div>`;
+  let h='';
+  if(s.phase==='predict'){
+    h=head+`<div class="talk">${pbg('think')}<div class="say">${m.q}</div></div>
+      <div class="mstep">① 먼저 예상해서 골라 보세요</div>
+      <div class="choices">${m.choices.map(c=>`<button class="ch" data-v="${c.v}"><span class="i">${c.i}</span>${c.label}</button>`).join('')}</div>`;
+  }else if(s.phase==='do'){
+    h=head+`<div class="talk">${pbg('happy')}<div class="say">${m.doText}</div></div>
+      <div class="mypick">🤔 내 예상: <b>${choiceLabel(m,s.pick)}</b><button class="link" id="repick">다시 고르기</button></div>
+      <div class="mstep live">② 실험하는 중이에요. 화면을 잘 보세요!</div>`+(m.doExtra?m.doExtra():'');
+  }else{
+    const ok=s.pick===m.answer;
+    h=head+`<div class="okbar ${ok?'yes':'no'}">${pbg(ok?'happy':'wow')}<b>${ok?'예상이 맞았어요! 👏':'예상과 달랐어요! 괜찮아요, 과학자도 이렇게 배워요 🙂'}</b></div>
+      <div class="cmp"><div><small>내 예상</small><b>${choiceLabel(m,s.pick)}</b></div><div class="ar">➜</div><div class="res"><small>실험 결과</small><b>${m.result}</b></div></div>
+      <div class="exp">📌 ${m.explain}</div>
+      ${MS.lens?`<div class="lensx">🔍 <b>돋보기로 보면?</b> ${m.lensText}</div>`:`<button class="big alt" id="seeLens">🔍 돋보기로 왜 그런지 보기</button>`}
+      ${msAllDone()?`<button class="big" id="toSum">🎉 미션 완료! 정리하러 가기</button>`:`<button class="big" id="nextM">다음 미션 ▶</button>`}`;
+  }
+  $('mcard').innerHTML=h;
+  $('mcard').querySelectorAll('.ch').forEach(b=>b.onclick=()=>{s.pick=b.dataset.v;s.phase='do';if(m.onStart)m.onStart();msRender();});
+  const rp=$('repick');if(rp)rp.onclick=()=>{s.phase='predict';msRender();};
+  const sl=$('seeLens');if(sl)sl.onclick=()=>setLens(true);
+  const nx=$('nextM');if(nx)nx.onclick=()=>{let i=MS.list.findIndex((mm,j)=>j>MS.cur&&MS.st[mm.id].phase!=='done');if(i<0)i=MS.list.findIndex(mm=>MS.st[mm.id].phase!=='done');msGo(i<0?0:i);};
+  const ts=$('toSum');if(ts)ts.onclick=()=>$('sheet').classList.add('open');
+  if(window.onMsRender)window.onMsRender(m,s);
+}
+function setLens(on){MS.lens=on;$('lensNote').classList.toggle('hide',!on);$('lensBtn').classList.toggle('on',on);$('lensBtn').innerHTML=on?'🔍 돋보기 끄기':'🔍 돋보기';if(MS.onLens)MS.onLens(on);msRender();}
+$('lensBtn').onclick=()=>setLens(!MS.lens);
+
+/* ================= 사용법 둘러보기 ================= */
+function startTour(steps){
+  steps=steps.filter(s=>{const r=s.rect();return r&&r.width>0;});
+  let i=0;const T=$('tour');T.classList.remove('hide');
+  const hole=T.querySelector('.hole'),tip=T.querySelector('.tip');
+  function show(){
+    const s=steps[i],r=s.rect(),pad=8;
+    Object.assign(hole.style,{left:(r.left-pad)+'px',top:(r.top-pad)+'px',width:(r.width+pad*2)+'px',height:(r.height+pad*2)+'px'});
+    tip.querySelector('.tx').innerHTML=s.text;tip.querySelector('.cnt').textContent=`${i+1} / ${steps.length}`;
+    tip.querySelector('.n').textContent=i===steps.length-1?'시작하기 ✔':'다음 ▶';
+    const vw=innerWidth,vh=innerHeight,tw=Math.min(340,vw-20);tip.style.width=tw+'px';
+    let left=r.left+r.width/2-tw/2,top=r.top+r.height+18;
+    if(top+150>vh){top=r.top-170;}
+    if(top<10){top=Math.max(10,r.top+20);left=r.left-tw-24;if(left<10)left=r.left+r.width+24;}
+    tip.style.left=clamp(left,10,vw-tw-10)+'px';tip.style.top=clamp(top,10,vh-170)+'px';
+  }
+  tip.querySelector('.n').onclick=()=>{if(i<steps.length-1){i++;show();}else T.classList.add('hide');};
+  tip.querySelector('.p').onclick=()=>{if(i>0){i--;show();}};
+  tip.querySelector('.x').onclick=()=>T.classList.add('hide');
+  show();
+}
+const elRect=sel=>()=>{const e=document.querySelector(sel);if(!e||e.offsetParent===null)return null;return e.getBoundingClientRect();};
+
+/* ================= 정리 · 전체 화면 · 시작 화면 · 세로 안내 ================= */
+function buildQuiz(QUIZ){
+  QUIZ.forEach(item=>{
+    const d=document.createElement('div');d.className='q';
+    d.innerHTML=`<p>${item.q}</p><div class="opts"></div><div class="fb"></div>`;
+    item.o.forEach((o,i)=>{const b=document.createElement('button');b.textContent=o;
+      b.onclick=()=>{d.querySelectorAll('button').forEach(x=>x.classList.remove('ok','no'));
+        b.classList.add(i===item.a?'ok':'no');
+        d.querySelector('.fb').innerHTML=i===item.a?'⭕ 정답! '+item.e:'❌ 다시 생각해 보세요. 실험 화면에서 확인해 봐요!';};
+      d.querySelector('.opts').appendChild(b);});
+    $('quiz').appendChild(d);
+  });
+}
+(function(){
+  const fsBtn=$('fsBtn'),fsOK=document.fullscreenEnabled||document.webkitFullscreenEnabled;
+  if(!fsOK){fsBtn.classList.add('hide');$('rotFS').classList.add('hide');}
+  async function goFS(){
+    try{if(!document.fullscreenElement){await document.documentElement.requestFullscreen({navigationUI:'hide'});try{await screen.orientation.lock('landscape');}catch(e){}}
+      else await document.exitFullscreen();}catch(e){}
+  }
+  fsBtn.onclick=goFS;$('startFS').onclick=()=>{$('start').classList.add('hide');goFS();};
+  if(!fsOK)$('startFS').classList.add('hide');
+  document.addEventListener('fullscreenchange',()=>{fsBtn.textContent=document.fullscreenElement?'↙ 작게':'⛶ 전체 화면';setTimeout(resize,150);});
+  $('rotFS').onclick=()=>{document.body.classList.add('okPortrait');goFS();};
+  $('rotOK').onclick=()=>{document.body.classList.add('okPortrait');resize();};
+  const sh=$('sheet');$('sumBtn').onclick=()=>sh.classList.add('open');
+  $('sheetClose').onclick=()=>sh.classList.remove('open');
+  sh.addEventListener('click',e=>{if(e.target===sh)sh.classList.remove('open');});
+  $('msReset').onclick=()=>{MS.list.forEach(m=>MS.st[m.id]={phase:'predict',pick:null});sh.classList.remove('open');msGo(0);};
+  $('startGo').onclick=()=>$('start').classList.add('hide');
+})();
+
+/* ================= 앱 ① 온도와 기체의 부피 ================= */
+const TANK_TOP=406,FLOOR=568,WATER=444,TB=580;
+const TANKS=[
+  {x:24,w:236,T:5,name:'얼음물',ic:'🧊',col:[140,200,250],tag:'#3b8cf0'},
+  {x:282,w:236,T:20,name:'보통 물',ic:'🚰',col:[165,214,245],tag:'#5a6b8c'},
+  {x:540,w:236,T:70,name:'뜨거운 물',ic:'🔥',col:[255,165,145],tag:'#f0574a'}];
+const tcx=i=>TANKS[i].x+TANKS[i].w/2;
+const PR=5,NP=30,MOUTH=-205;
+let t=0,gasT=20,size=sizeFor(20),rate=0,lensRef=null;
+let B={x:tcx(1),y:FLOOR,drag:false,offX:0,offY:0,anim:null,moved:false};
+function sizeFor(T){return clamp(0.2+(T-20)*0.016,0,1);}
+function bal(s){const rx=18+67*s,ry=9+73*s;return{rx,ry,cy:MOUTH-8-ry*0.9};}
+
+/* ---- 병과 풍선 속 공간 (알갱이가 있을 수 있는 곳) ---- */
+let PRIMS=[];
+function makePrims(){
+  const b=bal(size),r=PR;
+  PRIMS=[{t:'r',x0:-46+r,x1:46-r,y0:-150,y1:-8-r},
+    {t:'r',x0:-36+r,x1:36-r,y0:-162,y1:-148},
+    {t:'r',x0:-24+r,x1:24-r,y0:-176,y1:-160},
+    {t:'r',x0:-19+r,x1:19-r,y0:Math.min(MOUTH,b.cy),y1:-172}];
+  const ax=b.rx-r-3,ay=b.ry-r-3;if(ax>2&&ay>2)PRIMS.push({t:'e',cx:0,cy:b.cy,ax,ay});
+}
+function inP(p,x,y){if(p.t==='r')return x>=p.x0&&x<=p.x1&&y>=p.y0&&y<=p.y1;const dx=(x-p.cx)/p.ax,dy=(y-p.cy)/p.ay;return dx*dx+dy*dy<=1;}
+function inside(x,y){for(const p of PRIMS)if(inP(p,x,y))return true;return false;}
+function projP(p,x,y){
+  if(p.t==='r')return[clamp(x,p.x0,p.x1),clamp(y,p.y0,p.y1)];
+  const dx=(x-p.cx)/p.ax,dy=(y-p.cy)/p.ay,d=Math.hypot(dx,dy);if(d<=1)return[x,y];
+  return[p.cx+(x-p.cx)/d*0.98,p.cy+(y-p.cy)/d*0.98];
+}
+function project(x,y){let best=[0,-80],bd=1e18;for(const p of PRIMS){const q=projP(p,x,y),d=(q[0]-x)**2+(q[1]-y)**2;if(d<bd){bd=d;best=q;}}return best;}
+
+let P=[];
+function initParticles(){
+  makePrims();P=[];
+  while(P.length<NP){const x=-40+Math.random()*80,y=-145+Math.random()*135;
+    if(inside(x,y)){const a=Math.random()*Math.PI*2;P.push({x,y,vx:Math.cos(a),vy:Math.sin(a)});}}
+}
+initParticles();
+
+/* ---- 어느 물에 담겨 있나 ---- */
+function nearestTank(x){let bi=0,bd=1e9;TANKS.forEach((k,i)=>{const d=Math.abs(tcx(i)-x);if(d<bd){bd=d;bi=i;}});return bi;}
+function inWater(){return !B.drag&&!B.anim&&B.y>FLOOR-20?nearestTank(B.x):-1;}
+function liftY(){const b=bal(size);return Math.max(TANK_TOP-8,70-(b.cy-b.ry));}
+function moveTo(i){B.anim={ph:'rise',tx:tcx(i)};B.moved=true;}
+
+function step(dt){
+  const w=inWater(),env=w>=0?TANKS[w].T:20,k=w>=0?0.6:0.12;
+  gasT+=(env-gasT)*Math.min(1,dt*k);
+  const prev=size;size+=(sizeFor(gasT)-size)*Math.min(1,dt*3);
+  rate=lerp(rate,(size-prev)/Math.max(dt,1e-4),Math.min(1,dt*5));
+  // 병 옮기기 애니메이션
+  if(B.anim){const a=B.anim,ly=liftY();
+    if(a.ph==='rise'){B.y=Math.max(ly,B.y-650*dt);if(B.y<=ly+0.5)a.ph='move';}
+    else if(a.ph==='move'){const d=a.tx-B.x,s=Math.sign(d)*Math.min(Math.abs(d),750*dt);B.x+=s;if(Math.abs(a.tx-B.x)<0.5){B.x=a.tx;a.ph='drop';}}
+    else{B.y=Math.min(FLOOR,B.y+650*dt);if(B.y>=FLOOR){B.y=FLOOR;B.anim=null;}}}
+  // 공기 알갱이 (병 기준 좌표) — 크기·개수는 그대로, 빠르기만 온도에 따라
+  makePrims();
+  const sp=30+2.6*gasT;
+  for(const p of P){
+    const a=Math.atan2(p.vy,p.vx)+(Math.random()-.5)*0.25;p.vx=Math.cos(a)*sp;p.vy=Math.sin(a)*sp;
+    const nx=p.x+p.vx*dt,ny=p.y+p.vy*dt;
+    if(inside(nx,ny)){p.x=nx;p.y=ny;}
+    else if(inside(p.x-p.vx*dt,ny)){p.vx=-p.vx;p.y=ny;}
+    else if(inside(nx,p.y-p.vy*dt)){p.vy=-p.vy;p.x=nx;}
+    else{p.vx=-p.vx;p.vy=-p.vy;}
+    if(!inside(p.x,p.y)){const q=project(p.x,p.y);p.x=q[0];p.y=q[1];}
+  }
+}
+
+/* ---- 그리기 ---- */
+function bottlePath(){
+  ctx.beginPath();ctx.moveTo(-22,MOUTH);ctx.lineTo(-22,-182);ctx.lineTo(-50,-150);ctx.lineTo(-50,-14);ctx.quadraticCurveTo(-50,0,-36,0);
+  ctx.lineTo(36,0);ctx.quadraticCurveTo(50,0,50,-14);ctx.lineTo(50,-150);ctx.lineTo(22,-182);ctx.lineTo(22,MOUTH);
+}
+function drawTankBack(i){
+  const k=TANKS[i],c=k.col;
+  ctx.fillStyle='rgba(255,255,255,.55)';rr(k.x,TANK_TOP,k.w,TB-TANK_TOP,16);ctx.fill();
+  const g=ctx.createLinearGradient(0,WATER,0,TB);g.addColorStop(0,`rgba(${c},.75)`);g.addColorStop(1,`rgba(${c},.95)`);
+  ctx.fillStyle=g;rr(k.x+6,WATER,k.w-12,TB-WATER-6,10);ctx.fill();
+}
+function drawTankFront(i){
+  const k=TANKS[i],c=k.col;
+  ctx.fillStyle=`rgba(${c},.22)`;ctx.fillRect(k.x+6,WATER,k.w-12,TB-WATER-6);
+  ctx.strokeStyle='rgba(255,255,255,.85)';ctx.lineWidth=3;ctx.beginPath();
+  for(let x=k.x+6;x<=k.x+k.w-6;x+=8){const y=WATER+Math.sin(x*0.06+t*2.2)*1.8;x===k.x+6?ctx.moveTo(x,y):ctx.lineTo(x,y);}ctx.stroke();
+  ctx.strokeStyle='#9cb7dd';ctx.lineWidth=6;ctx.beginPath();ctx.moveTo(k.x,TANK_TOP);ctx.lineTo(k.x,TB-14);ctx.quadraticCurveTo(k.x,TB,k.x+14,TB);
+  ctx.lineTo(k.x+k.w-14,TB);ctx.quadraticCurveTo(k.x+k.w,TB,k.x+k.w,TB-14);ctx.lineTo(k.x+k.w,TANK_TOP);ctx.stroke();
+  // 온도계
+  const tx=k.x+22,top=WATER-28,bot=TB-16;ctx.fillStyle='#fff';ctx.strokeStyle='#8b98b0';ctx.lineWidth=2.5;rr(tx-6,top,12,bot-top,6);ctx.fill();ctx.stroke();
+  ctx.beginPath();ctx.arc(tx,bot,10,0,Math.PI*2);ctx.fillStyle='#ff5a5a';ctx.fill();ctx.stroke();
+  const h=(bot-top-12)*(k.T/80);ctx.fillStyle='#ff5a5a';ctx.fillRect(tx-2.5,bot-6-h,5,h+6);
+  // 얼음 · 김
+  if(k.T<10){[[k.x+70,0.3],[k.x+165,-0.2],[k.x+205,0.5]].forEach(([x,r],j)=>{const y=WATER-4+Math.sin(t*1.6+j)*2;
+    ctx.save();ctx.translate(x,y);ctx.rotate(r);ctx.fillStyle='rgba(235,250,255,.95)';ctx.strokeStyle='#8ccbea';ctx.lineWidth=2;rr(-14,-14,28,28,6);ctx.fill();ctx.stroke();ctx.restore();});}
+  if(k.T>50){ctx.save();ctx.lineWidth=4;ctx.lineCap='round';[k.x+60,k.x+120,k.x+190].forEach((x,j)=>{const ph=(t*0.6+j*0.33)%1,y0=WATER-8-ph*70;
+    ctx.strokeStyle=`rgba(255,255,255,${(1-ph)*0.95})`;ctx.beginPath();for(let q=0;q<=10;q++){const yy=y0-q*4,xx=x+Math.sin(q*0.6+t*3+j)*5;q?ctx.lineTo(xx,yy):ctx.moveTo(xx,yy);}ctx.stroke();});ctx.restore();}
+  label(`${k.ic} ${k.name} ${k.T}°C`,tcx(i),TB+21,k.tag,'#fff',17);
+}
+function drawBottle(){
+  const b=bal(size),L=MS.lens;
+  ctx.save();ctx.translate(B.x,B.y);
+  if(B.drag||B.anim){ctx.fillStyle='rgba(40,50,90,.12)';ctx.beginPath();ctx.ellipse(0,FLOOR-B.y+6,52,8,0,0,Math.PI*2);ctx.fill();}
+  bottlePath();ctx.fillStyle=L?'rgba(255,255,255,.75)':'rgba(232,244,255,.9)';ctx.fill();
+  // 처음 크기
+  if(Math.abs(size-0.2)>0.05){const g=bal(0.2);ctx.setLineDash([7,6]);ctx.strokeStyle='rgba(40,50,80,.75)';ctx.lineWidth=2.5;
+    ctx.beginPath();ctx.ellipse(0,g.cy,g.rx,g.ry,0,0,Math.PI*2);ctx.stroke();ctx.setLineDash([]);}
+  // 풍선
+  const grd=ctx.createRadialGradient(-b.rx*.35,b.cy-b.ry*.4,3,0,b.cy,Math.max(b.rx,b.ry));
+  const fa=L?0.22:0.92;grd.addColorStop(0,`rgba(255,160,175,${fa})`);grd.addColorStop(1,`rgba(255,80,110,${fa})`);
+  ctx.fillStyle=grd;ctx.strokeStyle='#e8435f';ctx.lineWidth=3;ctx.beginPath();ctx.ellipse(0,b.cy,b.rx,b.ry,0,0,Math.PI*2);ctx.fill();ctx.stroke();
+  if(size<0.3&&!L){ctx.strokeStyle=`rgba(170,30,60,${(0.3-size)/0.3*0.8})`;ctx.lineWidth=2;
+    for(let i=-1;i<=1;i++){ctx.beginPath();ctx.moveTo(i*b.rx*0.45,b.cy-b.ry*0.7);ctx.quadraticCurveTo(i*b.rx*0.45+5,b.cy,i*b.rx*0.4,b.cy+b.ry*0.7);ctx.stroke();}}
+  if(!L){ctx.fillStyle='rgba(255,255,255,.55)';ctx.beginPath();ctx.ellipse(-b.rx*.42,b.cy-b.ry*.42,Math.max(3,b.rx*.13),Math.max(2,b.ry*.22),-0.5,0,Math.PI*2);ctx.fill();}
+  ctx.fillStyle=L?'rgba(255,90,115,.35)':'#ff5a78';ctx.strokeStyle='#e8435f';ctx.lineWidth=3;rr(-27,MOUTH-14,54,24,8);ctx.fill();ctx.stroke();
+  ctx.fillStyle='#d6365a';rr(-30,MOUTH+6,60,9,4);ctx.fill();
+  // 공기 알갱이
+  if(L){const sp=30+2.6*gasT;
+    for(const p of P){ctx.strokeStyle='rgba(108,92,231,.25)';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(p.x,p.y);ctx.lineTo(p.x-p.vx/sp*sp*0.05,p.y-p.vy/sp*sp*0.05);ctx.stroke();
+      ctx.beginPath();ctx.arc(p.x,p.y,PR,0,Math.PI*2);ctx.fillStyle='#6c5ce7';ctx.fill();
+      ctx.beginPath();ctx.arc(p.x-1.6,p.y-1.6,1.6,0,Math.PI*2);ctx.fillStyle='rgba(255,255,255,.8)';ctx.fill();}}
+  bottlePath();ctx.strokeStyle='#6f9ccc';ctx.lineWidth=4;ctx.stroke();
+  ctx.strokeStyle='rgba(255,255,255,.85)';ctx.lineWidth=4;ctx.beginPath();ctx.moveTo(-38,-135);ctx.lineTo(-38,-20);ctx.stroke();
+  // 커지거나 작아지는 방향
+  const kk=Math.min(1,Math.abs(rate)*6);
+  if(kk>0.08){const out=rate>0,col=out?`rgba(255,90,90,${kk})`:`rgba(59,140,240,${kk})`;
+    for(const deg of [-165,-125,-90,-55,-15]){const a=deg*Math.PI/180,ux=Math.cos(a),uy=Math.sin(a),ex=ux*b.rx,ey=b.cy+uy*b.ry;
+      if(out)arrow(ex+ux*8,ey+uy*8,ex+ux*32,ey+uy*32,col,5);else arrow(ex+ux*34,ey+uy*34,ex+ux*10,ey+uy*10,col,5);}}
+  ctx.restore();
+  if(L)label(`병 속 공기 알갱이 ${NP}개`,B.x,Math.max(84,B.y+b.cy-b.ry-24),'#6c5ce7','#fff',15);
+  if(!B.moved){const bob=Math.sin(t*4)*6;label('👆 병을 끌어서 옮겨 보세요',B.x+150+bob,B.y-250,'#ffd93d','#2d3047',16);}
+}
+function draw(){
+  const g=ctx.createLinearGradient(0,0,0,H);g.addColorStop(0,'#f3faff');g.addColorStop(1,'#dcefff');ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
+  ctx.fillStyle='#e9c99a';ctx.fillRect(0,TB,W,H-TB);
+  TANKS.forEach((k,i)=>drawTankBack(i));
+  const m=msCur(),s=MS.st[m.id];
+  if(s.phase==='do'&&m.tank!==undefined&&inWater()!==m.tank){const k=TANKS[m.tank];pulseRing(k.x-6,TANK_TOP-12,k.w+12,H-TANK_TOP+6,t);}
+  if(B.drag){const i=nearestTank(B.x),k=TANKS[i];ctx.fillStyle='rgba(255,217,61,.25)';rr(k.x,TANK_TOP,k.w,TB-TANK_TOP,16);ctx.fill();}
+  drawBottle();
+  TANKS.forEach((k,i)=>drawTankFront(i));
+  let st='';
+  if(B.drag||B.anim)st='병을 옮기는 중…';
+  else if(rate>0.02)st='풍선이 커지고 있어요…';else if(rate<-0.02)st='풍선이 작아지고 있어요…';
+  else if(size>0.6)st='풍선이 부풀었어요! 🎈';else if(size<0.06)st='풍선이 쪼그라들었어요!';
+  bubble(st);
+}
+
+/* ---- 손가락 조작 ---- */
+cv.addEventListener('pointerdown',e=>{
+  const p=canvasPt(e),b=bal(size),lx=p.x-B.x,ly=p.y-B.y;
+  if(Math.abs(lx)<64&&ly<14&&ly>b.cy-b.ry-14){B.drag=true;B.anim=null;B.moved=true;B.offX=lx;B.offY=ly;cv.setPointerCapture(e.pointerId);return;}
+  for(let i=0;i<3;i++){const k=TANKS[i];if(p.x>k.x&&p.x<k.x+k.w&&p.y>TANK_TOP-40){if(nearestTank(B.x)!==i||B.y<FLOOR-1)moveTo(i);return;}}
+});
+cv.addEventListener('pointermove',e=>{
+  if(!B.drag)return;const p=canvasPt(e);
+  B.x=clamp(p.x-B.offX,70,730);const ly=liftY();B.y=clamp(p.y-B.offY,Math.min(ly,FLOOR),ly);
+});
+function endDrag(){if(!B.drag)return;B.drag=false;const i=nearestTank(B.x);B.anim={ph:'move',tx:tcx(i)};}
+cv.addEventListener('pointerup',endDrag);cv.addEventListener('pointercancel',endDrag);
+$('resetBtn').onclick=()=>{B={x:tcx(1),y:FLOOR,drag:false,offX:0,offY:0,anim:null,moved:B.moved};gasT=20;size=sizeFor(20);rate=0;initParticles();lensRef=MS.lens?gasT:null;};
+
+/* ---- 미션 ---- */
+const CH=[{v:'big',i:'🎈',label:'커진다'},{v:'small',i:'🫧',label:'작아진다'},{v:'same',i:'⏸️',label:'그대로다'}];
+MS.onLens=on=>{lensRef=on?gasT:null;};
+msInit([
+  {id:'m1',short:'뜨거운 물',title:'뜨거운 물에 넣으면?',tank:2,choices:CH,answer:'big',
+   q:'병을 <b>뜨거운 물</b>에 넣으면<br>풍선은 어떻게 될까?',
+   doText:'병을 손가락으로 끌어서<br><b>🔥 뜨거운 물</b>에 넣어 보세요!',
+   check:()=>inWater()===2&&gasT>55,result:'풍선이 커졌다',
+   explain:'병 속 공기의 <b>온도가 높아지면</b> 기체의 <b>부피가 커져요.</b>',
+   lensText:'따뜻해진 공기 알갱이는 더 빠르게 움직이며 서로 멀어져, 풍선 속까지 더 넓게 퍼져요. 알갱이의 개수와 크기는 그대로예요.'},
+  {id:'m2',short:'얼음물',title:'얼음물에 넣으면?',tank:0,choices:CH,answer:'small',
+   q:'병을 <b>얼음물</b>에 넣으면<br>풍선은 어떻게 될까?',
+   doText:'병을 손가락으로 끌어서<br><b>🧊 얼음물</b>에 넣어 보세요!',
+   check:()=>inWater()===0&&gasT<9,result:'풍선이 작아졌다',
+   explain:'병 속 공기의 <b>온도가 낮아지면</b> 기체의 <b>부피가 작아져요.</b>',
+   lensText:'차가워진 공기 알갱이는 느리게 움직이며 서로 가까워져, 좁은 곳에 모여요. 그래도 알갱이는 멈추지 않고 계속 움직여요.'},
+  {id:'m3',short:'돋보기',title:'공기 알갱이 세어 보기',
+   choices:[{v:'more',i:'➕',label:'많아진다'},{v:'same',i:'🟰',label:'그대로다'},{v:'less',i:'➖',label:'적어진다'}],answer:'same',
+   q:'🔍 돋보기로 보면, 병을 데우거나 식힐 때<br><b>공기 알갱이의 개수</b>는?',
+   doText:'<b>🔍 돋보기</b>를 켜고, 병을 다른 물로 옮겨 보세요. 알갱이 수를 살펴봐요!',
+   onStart:()=>{lensRef=MS.lens?gasT:null;},
+   check:()=>MS.lens&&lensRef!==null&&Math.abs(gasT-lensRef)>25,result:`${NP}개 그대로`,
+   explain:'온도가 변해도 공기 알갱이의 <b>개수와 크기는 변하지 않아요.</b>',
+   lensText:'달라지는 것은 알갱이가 움직이는 빠르기와 알갱이 사이의 거리예요.'}
+],null);
+window.onMsRender=(m,s)=>{$('lensBtn').classList.toggle('flash',m.id==='m3'&&s.phase==='do'&&!MS.lens);};
+
+/* ---- 사용법 ---- */
+const TOUR=[
+  {rect:elRect('#stamps'),text:'⭐ <b>미션 도장판</b>이에요. 미션을 끝낼 때마다 도장을 받아요.'},
+  {rect:elRect('#mcard'),text:'💬 뽀글이의 질문을 읽고, <b>먼저 예상</b>해서 골라요. 그다음 실험해요!'},
+  {rect:()=>toScreen(B.x-90,B.y+bal(size).cy-bal(size).ry-20,180,-(bal(size).cy-bal(size).ry)+30),text:'👆 <b>병을 손가락으로 끌어서</b> 다른 수조에 넣어요. 수조를 톡 눌러도 병이 옮겨 가요.'},
+  {rect:elRect('#lensBtn'),text:'🔍 <b>돋보기</b>를 누르면 눈에 보이지 않는 공기 알갱이를 상상해서 볼 수 있어요.'},
+  {rect:elRect('#resetBtn'),text:'↺ 실험을 <b>처음 모습</b>으로 되돌려요.'},
+  {rect:elRect('#sumBtn'),text:'📒 <b>알게 된 점</b>과 <b>확인 문제</b>는 여기에 있어요.'},
+  {rect:elRect('#fsBtn'),text:'⛶ <b>전체 화면</b>으로 크게 볼 수 있어요.'}];
+$('helpBtn').onclick=()=>startTour(TOUR);
+$('startHelp').onclick=()=>{$('start').classList.add('hide');startTour(TOUR);};
+
+buildQuiz([
+  {q:'1. 집기병을 뜨거운 물에 넣으면 풍선은 어떻게 될까요?',o:['부풀어요','쪼그라들어요','변화가 없어요'],a:0,e:'병 속 공기의 온도가 높아지면 공기의 부피가 커지기 때문이에요.'},
+  {q:'2. 공기의 온도가 높아지면 공기 알갱이의 개수는?',o:['많아져요','그대로예요','적어져요'],a:1,e:'알갱이의 개수와 크기는 그대로예요. 움직임이 빨라지고 사이가 멀어질 뿐이에요.'},
+  {q:'3. 찌그러진 탁구공을 펴려면 어디에 넣으면 좋을까요?',o:['얼음물','뜨거운 물','냉장고'],a:1,e:'탁구공 속 공기의 온도가 높아지면 부피가 커져서 찌그러진 곳이 펴져요.'}]);
+
+/* ---- 실행 ---- */
+let last=performance.now();
+function loop(now){
+  const dt=Math.min(0.04,(now-last)/1000);last=now;t+=dt;
+  step(dt/2);step(dt/2);msTick();draw();requestAnimationFrame(loop);
+}
+requestAnimationFrame(loop);
+
+/* ---- 점검용 (화면에는 영향 없음) ---- */
+window.__T={
+  sim(n,dt){for(let i=0;i<n;i++){t+=dt;step(dt/2);step(dt/2);msTick();}},
+  bad(){makePrims();let c=0;for(const p of P){if(!inside(p.x,p.y)){const q=project(p.x,p.y);if(Math.hypot(q[0]-p.x,q[1]-p.y)>0.5)c++;}}return c;},
+  count:()=>P.length,
+  state:()=>({gasT,size,B:{...B},tank:inWater()}),
+  moveTo,setDrag(x,y){B.drag=true;B.anim=null;B.x=clamp(x,70,730);B.y=liftY();},drop:endDrag,
+};
+
+</script>
+</body>
+</html>
